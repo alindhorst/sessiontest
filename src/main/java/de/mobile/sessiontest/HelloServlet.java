@@ -1,14 +1,17 @@
-
 package de.mobile.sessiontest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 /**
  *
@@ -18,8 +21,7 @@ import javax.servlet.http.HttpSession;
 public class HelloServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -30,21 +32,24 @@ public class HelloServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            int responseCode = SC_OK;
             HttpSession session = request.getSession(false);
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");    
-            out.println("</head>");
-            out.println("<body>");
-            if (session!=null) {
-                out.println("<h1>Hello, I found a session in your request:" + session.getId() + "</h1>");
-            }else {
+            StringBuilder responseBuilder = new StringBuilder();
+            responseBuilder.append("<!DOCTYPE html>").append("<html>").append("<head>").append("</head>").append(
+                    "<body>");
+            if (session != null) {
+                responseBuilder.append("<h1>Hello, I found a session in your request:").append(session.getId())
+                        .append("</h1>");
+            } else {
+                responseCode = SC_UNAUTHORIZED;
                 session = request.getSession(true);
-                out.println("<h1>Hello, I created a new session:" + session.getId() + "</h1>");
+                responseBuilder.append("<h1>Hello, I created a new session:").append(session.getId()).append("</h1>");
             }
-            out.println("<a href=\""+response.encodeURL(request.getRequestURL().toString())+"\">Reload</a>");
-            out.println("</body>");
-            out.println("</html>");
+            responseBuilder.append("<a href=\"").append(response.encodeURL(request.getRequestURL().toString()))
+                    .append("\">Reload</a>").append("</body>").append("</html>");
+
+            response.setStatus(responseCode);
+            response.getWriter().print(responseBuilder.toString());
         }
     }
 
