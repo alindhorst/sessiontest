@@ -1,5 +1,5 @@
 {
-  "ID": "st0",
+    "ID": "st<INDEX>",
   "Name": "sessiontest",
   "Address": "<IP>",
   "Port": 8080,

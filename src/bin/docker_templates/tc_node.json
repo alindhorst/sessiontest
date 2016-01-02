@@ -1,5 +1,5 @@
 {
   "Datacenter": "dc1",
-  "Node": "st0",
+    "Node": "st<INDEX>",
   "Address": "<IP>"
 }
