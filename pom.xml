@@ -12,6 +12,9 @@
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <memcached-session-manager-version>1.8.3</memcached-session-manager-version>
+        <spymemcached-version>2.11.1</spymemcached-version>
+        <msm-kryo-serializer-version>1.8.0</msm-kryo-serializer-version>
     </properties>
     
     <dependencies>
@@ -26,6 +29,36 @@
             <artifactId>guava</artifactId>
             <version>19.0</version>
         </dependency>
+        <dependency>
+            <groupId>de.javakaffee.msm</groupId>
+            <artifactId>memcached-session-manager</artifactId>
+            <version>${memcached-session-manager-version}</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.couchbase.client</groupId>
+                    <artifactId>couchbase-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>de.javakaffee.msm</groupId>
+            <artifactId>memcached-session-manager-tc7</artifactId>
+            <version>${memcached-session-manager-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.spy</groupId>
+            <artifactId>spymemcached</artifactId>
+            <version>${spymemcached-version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.javakaffee.msm</groupId>
+            <artifactId>msm-kryo-serializer</artifactId>
+            <version>${msm-kryo-serializer-version}</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -36,8 +69,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>
@@ -49,6 +82,7 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <packagingExcludes>WEB-INF/lib/*memcache*.jar</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -102,12 +136,17 @@
                                 <configuration>
                                     <imageName>sessiontest</imageName>
                                     <newName>${project.version}</newName>
-                                    <baseImage>tomcat</baseImage>
+                                    <baseImage>tomcat:7-jre8</baseImage>
                                     <resources>
                                         <resource>
                                             <targetPath>/usr/local/tomcat/webapps</targetPath>
                                             <directory>${project.build.directory}</directory>
                                             <include>${project.build.finalName}.war</include>
+                                        </resource>
+                                        <resource>
+                                            <targetPath>/usr/local/tomcat/lib</targetPath>
+                                            <directory>${project.build.directory}/sessiontest/WEB-INF/lib</directory>
+                                            <include>*memcache*.jar</include>
                                         </resource>
                                     </resources>
                                 </configuration>

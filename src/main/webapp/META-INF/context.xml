@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Context path="/sessiontest"/>
+<Context path="/sessiontest">
+    <Manager className="de.javakaffee.web.msm.MemcachedBackupSessionManager"
+             memcachedNodes="n1:memcached.service.consul:11211"
+             lockingMode="auto"
+             sessionBackupAsync="false"
+             requestUriIgnorePattern=".*\.(ico|png|gif|jpg|css|js)$"
+             transcoderFactoryClass="de.javakaffee.web.msm.serializer.kryo.KryoTranscoderFactory"
+    />
+</Context>
