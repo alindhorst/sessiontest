@@ -3,7 +3,7 @@
     "Name": "memcached",
     "Address": "<IP>",
     "Port": 11211,
-    "Service": "sessiontest",
+    "Service": "memcached",
     "Check": {
         "Script": "echo stats|nc <IP> 11211",
         "Interval": "1s",
