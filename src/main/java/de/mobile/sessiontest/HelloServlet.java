@@ -38,12 +38,14 @@ public class HelloServlet extends HttpServlet {
             responseBuilder.append("<!DOCTYPE html>").append("<html>").append("<head>").append("</head>").append(
                     "<body>");
             if (session != null) {
-                responseBuilder.append("<h1>Hello, I found a session in your request:").append(session.getId())
-                        .append("</h1>");
+                responseBuilder.append("<h1>Hello, I found a session in your request: ").append(session.getId())
+                        .append("</h1><div>This is your ").append(getAndIncrementCounter(session)).append(
+                        " visit.</div>");
             } else {
                 responseCode = SC_UNAUTHORIZED;
                 session = request.getSession(true);
                 responseBuilder.append("<h1>Hello, I created a new session:").append(session.getId()).append("</h1>");
+                getAndIncrementCounter(session);
             }
             responseBuilder.append("<a href=\"").append(response.encodeURL(request.getRequestURL().toString()))
                     .append("\">Reload</a>").append("</body>").append("</html>");
@@ -51,6 +53,17 @@ public class HelloServlet extends HttpServlet {
             response.setStatus(responseCode);
             response.getWriter().print(responseBuilder.toString());
         }
+    }
+
+    private int getAndIncrementCounter(HttpSession session) {
+        Integer value = (Integer) session.getAttribute("counter");
+        if (value == null) {
+            session.setAttribute("counter", 0);
+        }
+        int counter = (int) session.getAttribute("counter");
+        counter++;
+        session.setAttribute("counter", counter);
+        return counter;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
