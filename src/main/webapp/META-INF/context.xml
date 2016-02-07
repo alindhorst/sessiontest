@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/sessiontest">
-    <Manager className="de.alexanderlindhorst.riak.session.manager.RiakSessionManager" riakServiceImplementationClassName="de.alexanderlindhorst.riak.session.access.FakeRiakService"/>
+    <Manager
+        className="de.alexanderlindhorst.riak.session.manager.RiakSessionManager"
+        serviceImplementationClassName="de.alexanderlindhorst.riak.session.access.SynchronousRiakService"
+        serviceBackendAddress="riak.service.consul:8087"/>
 </Context>
