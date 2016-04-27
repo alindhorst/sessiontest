@@ -100,8 +100,7 @@
                                 </goals>
                                 <configuration>
                                     <imageName>sessiontest</imageName>
-                                    <newName>${project.version}</newName>
-                                    <baseImage>tomcat:7-jre8</baseImage>
+                                    <dockerDirectory>src/docker</dockerDirectory>
                                     <resources>
                                         <resource>
                                             <targetPath>/usr/local/tomcat/webapps</targetPath>
