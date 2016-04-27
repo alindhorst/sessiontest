@@ -47,9 +47,7 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
-                    <packagingExcludes>WEB-INF/lib/*memcache*.jar</packagingExcludes>
-                    <packagingExcludes>WEB-INF/lib/*riak*.jar</packagingExcludes>
-                    <packagingExcludes>WEB-INF/lib/*javakaffee*.jar</packagingExcludes>
+                    <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>
                 </configuration>
             </plugin>
             <plugin>
