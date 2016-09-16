@@ -1,0 +1,103 @@
+Session starts with route, reload brings session w/o jvmRoute (encodeURL uses getIdInternal)
+
+
+---
+
+
+Session retrieval runs into NPE first time around
+
+05:03:27.103 [http-apr-8080-exec-2] DEBUG SessionManagement - createSession null
+05:03:27.106 [http-apr-8080-exec-2] DEBUG SessionManagement - getNewSession
+05:03:27.117 [http-apr-8080-exec-2] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:03:27.535 [http-apr-8080-exec-2] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal - Response: {location: {namespace: {type: default, bucket: SESSIONS}, key: 10C27D117CE19D2DEAB80D30E88F9BB1}, values: []}
+05:03:27.540 [http-apr-8080-exec-2] DEBUG SessionManagement - event SessionEvent['StandardSession[10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e]','SESSION_ATTRIBUTE_SET']
+05:03:27.540 [http-apr-8080-exec-2] DEBUG SessionManagement - storeSession called for id 10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e
+05:03:27.540 [http-apr-8080-exec-2] DEBUG SessionManagement - storing session
+05:03:27.542 [http-apr-8080-exec-2] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:03:27.549 [http-apr-8080-exec-2] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal - Response: {location: {namespace: {type: default, bucket: SESSIONS}, key: 10C27D117CE19D2DEAB80D30E88F9BB1}, values: []}
+05:03:27.550 [http-apr-8080-exec-2] DEBUG SessionManagement - event SessionEvent['StandardSession[10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e]','SESSION_ATTRIBUTE_SET']
+05:03:27.550 [http-apr-8080-exec-2] DEBUG SessionManagement - storeSession called for id 10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e
+05:03:27.550 [http-apr-8080-exec-2] DEBUG SessionManagement - storing session
+05:03:27.551 [http-apr-8080-exec-2] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:03:27.554 [http-apr-8080-exec-2] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal - Response: {location: {namespace: {type: default, bucket: SESSIONS}, key: 10C27D117CE19D2DEAB80D30E88F9BB1}, values: []}
+
+
+-- next
+
+05:19:42.493 [http-apr-8080-exec-5] DEBUG SessionManagement - findSession #10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.493 [http-apr-8080-exec-5] DEBUG SessionManagement - session 10C27D117CE19D2DEAB80D30E88F9BB1 has no or not current jvm route, fetching from service for agnostic id 10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.494 [http-apr-8080-exec-5] DEBUG d.a.r.s.manager.BackendServiceBase - getSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.549 [http-apr-8080-exec-5] ERROR d.a.r.s.manager.BackendServiceBase - Couldn't deserialize session, will return null value
+java.lang.NullPointerException: null
+	at org.apache.catalina.session.StandardSession.doReadObject(StandardSession.java:1610) ~[catalina.jar:8.0.36]
+	at org.apache.catalina.session.StandardSession.readObjectData(StandardSession.java:1090) ~[catalina.jar:8.0.36]
+	at de.alexanderlindhorst.riak.session.manager.PersistableSessionUtils.deserializeSessionInto(PersistableSessionUtils.java:53) ~[riak-session-manager-1.0-SNAPSHOT-shaded.jar:na]
+	at de.alexanderlindhorst.riak.session.manager.BackendServiceBase.getSession(BackendServiceBase.java:30) [riak-session-manager-1.0-SNAPSHOT-shaded.jar:na]
+	at de.alexanderlindhorst.riak.session.manager.RiakSessionManager.findSession(RiakSessionManager.java:113) [riak-session-manager-1.0-SNAPSHOT-shaded.jar:na]
+	at org.apache.catalina.connector.Request.doGetSession(Request.java:2913) [catalina.jar:8.0.36]
+	at org.apache.catalina.connector.Request.getSessionInternal(Request.java:2566) [catalina.jar:8.0.36]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:429) [catalina.jar:8.0.36]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:141) [catalina.jar:8.0.36]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79) [catalina.jar:8.0.36]
+	at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:616) [catalina.jar:8.0.36]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:88) [catalina.jar:8.0.36]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:528) [catalina.jar:8.0.36]
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1099) [tomcat-coyote.jar:8.0.36]
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:670) [tomcat-coyote.jar:8.0.36]
+	at org.apache.tomcat.util.net.AprEndpoint$SocketWithOptionsProcessor.run(AprEndpoint.java:2445) [tomcat-coyote.jar:8.0.36]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [na:1.8.0_102]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [na:1.8.0_102]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-util.jar:8.0.36]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_102]
+05:19:42.550 [http-apr-8080-exec-5] DEBUG SessionManagement - findSession #10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.550 [http-apr-8080-exec-5] DEBUG SessionManagement - session 10C27D117CE19D2DEAB80D30E88F9BB1 has no or not current jvm route, fetching from service for agnostic id 10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.550 [http-apr-8080-exec-5] DEBUG d.a.r.s.manager.BackendServiceBase - getSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.556 [http-apr-8080-exec-5] DEBUG SessionManagement - session found, setting flags
+05:19:42.556 [http-apr-8080-exec-5] DEBUG SessionManagement - setting session id to new id 10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e
+05:19:42.556 [http-apr-8080-exec-5] DEBUG d.a.r.s.manager.BackendServiceBase - deleteSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.577 [http-apr-8080-exec-5] DEBUG SessionManagement - event SessionEvent['StandardSession[10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e]','SESSION_ATTRIBUTE_SET']
+05:19:42.577 [http-apr-8080-exec-5] DEBUG SessionManagement - storeSession called for id 10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e
+05:19:42.577 [http-apr-8080-exec-5] DEBUG SessionManagement - storing session
+05:19:42.579 [http-apr-8080-exec-5] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:19:42.583 [http-apr-8080-exec-5] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal - Response: {location: {namespace: {type: default, bucket: SESSIONS}, key: 10C27D117CE19D2DEAB80D30E88F9BB1}, values: []}
+
+-- next
+05:21:24.121 [http-apr-8080-exec-7] DEBUG SessionManagement - findSession #10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.122 [http-apr-8080-exec-7] DEBUG SessionManagement - session 10C27D117CE19D2DEAB80D30E88F9BB1 has no or not current jvm route, fetching from service for agnostic id 10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.123 [http-apr-8080-exec-7] DEBUG d.a.r.s.manager.BackendServiceBase - getSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.128 [http-apr-8080-exec-7] ERROR d.a.r.s.manager.BackendServiceBase - Couldn't deserialize session, will return null value
+java.lang.NullPointerException: null
+	at org.apache.catalina.session.StandardSession.doReadObject(StandardSession.java:1610) ~[catalina.jar:8.0.36]
+	at org.apache.catalina.session.StandardSession.readObjectData(StandardSession.java:1090) ~[catalina.jar:8.0.36]
+	at de.alexanderlindhorst.riak.session.manager.PersistableSessionUtils.deserializeSessionInto(PersistableSessionUtils.java:53) ~[riak-session-manager-1.0-SNAPSHOT-shaded.jar:na]
+	at de.alexanderlindhorst.riak.session.manager.BackendServiceBase.getSession(BackendServiceBase.java:30) [riak-session-manager-1.0-SNAPSHOT-shaded.jar:na]
+	at de.alexanderlindhorst.riak.session.manager.RiakSessionManager.findSession(RiakSessionManager.java:113) [riak-session-manager-1.0-SNAPSHOT-shaded.jar:na]
+	at org.apache.catalina.connector.Request.doGetSession(Request.java:2913) [catalina.jar:8.0.36]
+	at org.apache.catalina.connector.Request.getSessionInternal(Request.java:2566) [catalina.jar:8.0.36]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:429) [catalina.jar:8.0.36]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:141) [catalina.jar:8.0.36]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79) [catalina.jar:8.0.36]
+	at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:616) [catalina.jar:8.0.36]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:88) [catalina.jar:8.0.36]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:528) [catalina.jar:8.0.36]
+	at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1099) [tomcat-coyote.jar:8.0.36]
+	at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:670) [tomcat-coyote.jar:8.0.36]
+	at org.apache.tomcat.util.net.AprEndpoint$SocketWithOptionsProcessor.run(AprEndpoint.java:2445) [tomcat-coyote.jar:8.0.36]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [na:1.8.0_102]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [na:1.8.0_102]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) [tomcat-util.jar:8.0.36]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_102]
+05:21:24.128 [http-apr-8080-exec-7] DEBUG SessionManagement - findSession #10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.128 [http-apr-8080-exec-7] DEBUG SessionManagement - session 10C27D117CE19D2DEAB80D30E88F9BB1 has no or not current jvm route, fetching from service for agnostic id 10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.128 [http-apr-8080-exec-7] DEBUG d.a.r.s.manager.BackendServiceBase - getSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.132 [http-apr-8080-exec-7] DEBUG SessionManagement - session found, setting flags
+05:21:24.132 [http-apr-8080-exec-7] DEBUG SessionManagement - setting session id to new id 10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e
+05:21:24.132 [http-apr-8080-exec-7] DEBUG d.a.r.s.manager.BackendServiceBase - deleteSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.140 [http-apr-8080-exec-7] DEBUG SessionManagement - event SessionEvent['StandardSession[10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e]','SESSION_ATTRIBUTE_SET']
+05:21:24.140 [http-apr-8080-exec-7] DEBUG SessionManagement - storeSession called for id 10C27D117CE19D2DEAB80D30E88F9BB1.6f3e89508b8e
+05:21:24.140 [http-apr-8080-exec-7] DEBUG SessionManagement - storing session
+05:21:24.141 [http-apr-8080-exec-7] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal 10C27D117CE19D2DEAB80D30E88F9BB1
+05:21:24.152 [http-apr-8080-exec-7] DEBUG d.a.r.s.manager.BackendServiceBase - persistSessionInternal - Response: {location: {namespace: {type: default, bucket: SESSIONS}, key: 10C27D117CE19D2DEAB80D30E88F9BB1}, values: []}
+
+
+
