@@ -51,7 +51,7 @@ public class HelloServlet extends HttpServlet {
                     .append("\">Reload</a>").append("</body>").append("</html>");
 
             response.setStatus(responseCode);
-            response.getWriter().print(responseBuilder.toString());
+            out.print(responseBuilder.toString());
         }
     }
 
