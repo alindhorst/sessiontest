@@ -3,7 +3,8 @@
     <Manager
         className="de.alexanderlindhorst.tomcat.session.manager.RiakSessionManager"
         serviceImplementationClassName="de.alexanderlindhorst.tomcat.session.access.SynchronousRiakService"
-        serviceBackendAddress="riak.service.consul:8087">
+        serviceBackendAddress="riak.service.consul:8087"
+        serviceSessionExpiryThreshold="30000">
         <SessionIdGenerator className="org.apache.catalina.util.StandardSessionIdGenerator" jvmRoute="${HOSTNAME}"/>
     </Manager>
     <Valve className="de.alexanderlindhorst.tomcat.session.valve.AdjustSessionIdToJvmRouteValve"/>
